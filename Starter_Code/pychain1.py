@@ -49,8 +49,7 @@ import hashlib
 # @TODO
 # Create a Record Data Class that consists of the `sender`, `receiver`, and
 # `amount` attributes
-
-@dataclass
+# YOUR CODE HERE
 
 class Record:
     sender: str
@@ -74,7 +73,7 @@ class Block:
 
     # @TODO
     # Rename the `data` attribute to `record`, and set the data type to `Record`
-    record: Record
+    data: Record
 
     creator_id: int
     prev_hash: str = "0"
@@ -119,7 +118,7 @@ class PyChain:
 
             calculated_hash = block.hash_block()
 
-        st.success("Wining Hash", calculated_hash)
+        print("Wining Hash", calculated_hash)
         return block
 
     def add_block(self, candidate_block):
@@ -136,7 +135,7 @@ class PyChain:
 
             block_hash = block.hash_block()
 
-        st.success("Blockchain is Valid")
+        print("Blockchain is Valid")
         return True
 
 ################################################################################
@@ -151,7 +150,7 @@ def setup():
     return PyChain([Block("Genesis", 0)])
 
 # ---------------------------------#
-# Page layout
+# Page layout (continued)
 # Divide page to 3 columns (col1 = sidebar, col2 and col3 = page contents)
 #images
 
@@ -161,19 +160,22 @@ from PIL import Image
 col1 = st.sidebar
 col2, col3 = st.columns((3, 1))
 
-img = Image.open("pow.jpg")
-col3.image(img,width=300,caption="Proof Of Work - Illustrated - Nelson Lubinda")
-col3.text("Great Work Takes Patience, Work Takes Time, and Time is Money ")
-col2.markdown("# PyChain - Proof Of Work")
-col2.markdown("### Store a Transaction Record in the PyChain")
-st.text("\n")
-st.text("\n")
-img2 = Image.open("application-image.png")
-col2.image(img2,caption="Hash")
-img3 = Image.open("poweq.png")
-col2.image(img3,width=250,caption="equation")
+col1.markdown("## Proof Of Work Hash Ledger")
+
+col2.markdown("# Proof Of Work Hash Ledger")
+
+image2 = Image.open("Images\title1bg.jpg")
+st.Image(image2)
+
+col2.markdown("## Store a Transaction Record in the PyChain")
+col2.markdown("This ledger should allow partner banks to conduct financial transactions \
+    (that is, to transfer money between senders and receivers) and to verify the integrity of the data in the ledger.")
+col2.markdown("# PyChain")
+col2.markdown("## Store a Transaction Record in the PyChain")
 
 pychain = setup()
+
+
 
 ################################################################################
 # Step 3:
@@ -192,19 +194,19 @@ pychain = setup()
 # @TODO:
 # Delete the `input_data` variable from the Streamlit interface.
 input_data = st.text_input("Block Data")
-st.success(input_data)
+
 # @TODO:
 # Add an input area where you can get a value for `sender` from the user.
-sender = st.text_input("Input Sender Information")
-st.success(sender)
+# YOUR CODE HERE
+
 # @TODO:
 # Add an input area where you can get a value for `receiver` from the user.
-receiver = st.text_input("Inpute Receiver Information")
-st.success(receiver)
+# YOUR CODE HERE
+
 # @TODO:
 # Add an input area where you can get a value for `amount` from the user.
-amount = st.text_input("Transaction Amount")
-st.success(amount)
+# YOUR CODE HERE
+
 if st.button("Add Block"):
     prev_block = pychain.chain[-1]
     prev_block_hash = prev_block.hash_block()
@@ -214,7 +216,7 @@ if st.button("Add Block"):
     # which is set equal to a `Record` that contains the `sender`, `receiver`,
     # and `amount` values
     new_block = Block(
-        record=Record(sender, receiver, amount),
+        data=input_data,
         creator_id=42,
         prev_hash=prev_block_hash
     )
@@ -228,24 +230,20 @@ if st.button("Add Block"):
 st.markdown("## The PyChain Ledger")
 
 pychain_df = pd.DataFrame(pychain.chain).astype(str)
-if st.checkbox('Show dataframe'):
-    st.write(pychain_df)
-
-img = Image.open("title1sm.jpg")
-col1.image(img,width=300,caption="Proof Of Work")
+st.write(pychain_df)
 
 difficulty = st.sidebar.slider("Block Difficulty", 1, 5, 2)
 pychain.difficulty = difficulty
 
-col1.write("# Block Inspector")
+st.sidebar.write("# Block Inspector")
 selected_block = st.sidebar.selectbox(
     "Which block would you like to see?", pychain.chain
 )
 
-col1.write(selected_block)
+st.sidebar.write(selected_block)
 
 if st.button("Validate Chain"):
-  st.success(pychain.is_valid())
+    st.write(pychain.is_valid())
 
 ################################################################################
 # Step 4:
